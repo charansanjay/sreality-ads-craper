@@ -1,0 +1,58 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+
+  button {
+    width: 40px;
+    height: 40px;
+    padding: 12px 12px;
+    background-color: transparent;
+    border: solid 1px #b6b3b3;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  button.active {
+    border: solid 1px #cc0000;
+    color: #cc0000;
+  }
+}
+
+
+/* For Mobile Phones */
+@media only screen and (max-width: 540px) {
+  .pagination {
+    flex-wrap: wrap;
+
+    button {
+      margin: 5px 5px;
+    }
+
+    button.active {
+      border: solid 1px #cc0000;
+      color: #cc0000;
+    }
+  }
+}
+
+
+/* For Large Tablets and Small Laptops*/
+@media only screen and (min-width: 541px) and (max-width: 1280px) {
+  .pagination {
+    flex-wrap: wrap;
+
+    button {
+      margin: 5px 5px;
+    }
+
+    button.active {
+      border: solid 1px #cc0000;
+      color: #cc0000;
+    }
+  }
+}
