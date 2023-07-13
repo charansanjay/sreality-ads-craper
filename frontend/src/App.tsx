@@ -49,13 +49,7 @@ const App: React.FC = () => {
 
         setItems(scrapedItems);
       } catch (error) {
-        /* const scrapedItems = ads.map((item: any) => ({
-          id: item.hash_id,
-          title: item.name,
-          imageUrl: item._links.images,
-        }));
-        setItems(scrapedItems); */
-        setError('Erroor fetching data. Please try again later.');
+        setError('Error fetching data. Please try again later.');
       }
     };
 
@@ -81,7 +75,7 @@ const App: React.FC = () => {
   return (
     <div className='app-container'>
       {/* heading */}
-      <h1>Scraped Items</h1>
+      <h1>Scraped Ads</h1>
 
       {/* Pagination section */}
       <Pagination
