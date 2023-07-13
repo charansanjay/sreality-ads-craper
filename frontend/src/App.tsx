@@ -30,9 +30,11 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(25);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true); // Track the loading state
 
   useEffect(() => {
     var isMounted = true; // Track the mounted state of the component
+    setIsLoading(true);
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/sreality`);
@@ -48,8 +50,11 @@ const App: React.FC = () => {
         );
 
         setItems(scrapedItems);
+        setError('');
+        setIsLoading(false);
       } catch (error) {
         setError('Error fetching data. Please try again later.');
+        setIsLoading(false);
       }
     };
 
@@ -67,34 +72,43 @@ const App: React.FC = () => {
 
   // Change page
   const paginate = (pageNumber: number) => {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     setCurrentPage(pageNumber);
-    
-  } 
+  };
 
   return (
     <div className='app-container'>
       {/* heading */}
       <h1>Scraped Ads</h1>
 
-      {/* Pagination section */}
-      <Pagination
-        itemsPerPage={itemsPerPage}
-        totalItems={items.length}
-        currentPage={currentPage}
-        paginate={paginate}
-      />
-      {/* Display Ads */}
-      <div className='items-per-page'>
-        <p>estates per page <span>{itemsPerPage}</span> </p>
-      </div>
-      {error ? <Modal message={error} /> : <AdsList items={currentItems} />}
-      <Pagination
-        itemsPerPage={itemsPerPage}
-        totalItems={items.length}
-        currentPage={currentPage}
-        paginate={paginate}
-      />
+      {isLoading ? (
+        <div className='loading-spinner' />
+      ) : error ? (
+        <Modal message={error} />
+      ) : (
+        <>
+          {/* Pagination section */}
+          <Pagination
+            itemsPerPage={itemsPerPage}
+            totalItems={items.length}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
+          {/* Display Ads */}
+          <div className='items-per-page'>
+            <p>
+              estates per page <span>{itemsPerPage}</span>{' '}
+            </p>
+          </div>
+          <AdsList items={currentItems} />
+          <Pagination
+            itemsPerPage={itemsPerPage}
+            totalItems={items.length}
+            currentPage={currentPage}
+            paginate={paginate}
+          />
+        </>
+      )}
     </div>
   );
 };
