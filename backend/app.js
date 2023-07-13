@@ -15,7 +15,7 @@ const corsOptions = {
 The Pool object is a connection pool that manages a set of database connections for efficient and scalable interaction with the PostgreSQL database.*/
 const pool = new Pool({
   user: 'postgres',
-  host: 'localhost',
+  host: 'db',
   database: 'postgres',
   password: 'charanpostgres',
   port: 5432, // Default PostgreSQL port is 5432
@@ -52,9 +52,29 @@ app.get('/api/sreality', async (req, res) => {
     console.log(response);
 
     if (response.status === 200) {
-      console.log('status 200');
+      console.log('status: ' + response.status);
 
-      // Insert the scrapedItems into the PostgreSQL database
+      /* Insert the scrapedItems into the PostgreSQL database */
+      // Check if table exists
+      const tableExists = await pool.query(
+        `SELECT EXISTS (
+          SELECT 1
+          FROM information_schema.tables
+          WHERE table_name = 'scraped_items'
+        )`
+      );
+
+      if (tableExists.rows[0].exists === false) {
+        // Create table if it doesn't exist
+        await pool.query(`
+          CREATE TABLE scraped_items (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            image_url VARCHAR(10485760) NOT NULL
+          )
+        `);
+      }
+
       await pool.query('BEGIN');
       for (const item of response.data._embedded.estates) {
         const result = await pool.query(
@@ -78,11 +98,9 @@ app.get('/api/sreality', async (req, res) => {
         }
       }
       await pool.query('COMMIT');
-      // Send the response to the client
-      return res.json(response.data);
 
+      return res.json(response.data); // Send the scraped items to the client
     } else {
-      console.log('status not 200');
       return res.json({
         status: 401,
         error: 'Error fetching data. Please try again later.',
