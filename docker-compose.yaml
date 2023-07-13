@@ -1,15 +1,15 @@
-version: '3.8'
+version: '3'
 services:
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/frontend
     ports:
-      - '8080:80'
+      - '3000:3000'
+      - '8080:8080'
     depends_on:
       - backend
+    
 
   backend:
     build:
@@ -19,7 +19,7 @@ services:
       - '5000:5000'
     environment:
       - PGHOST=db
-      - PGDATABASE=sreality_ads
+      - PGDATABASE=postgres
       - PGUSER=postgres
       - PGPASSWORD=charanpostgres
       - PGPORT=5432
@@ -31,7 +31,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=charanpostgres
-      - POSTGRES_DB=sreality_ads
+      - POSTGRES_DB=postgres
     ports:
       - '5432:5432'
     volumes:
